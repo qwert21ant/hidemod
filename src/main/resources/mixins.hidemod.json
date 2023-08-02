@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.7.10",
+  "package": "ru.qwert21.hidemod.mixins",
+  "refmap": "mixins.hidemod.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinModList",
+    "MixinGuiModList"
+  ]
+}
