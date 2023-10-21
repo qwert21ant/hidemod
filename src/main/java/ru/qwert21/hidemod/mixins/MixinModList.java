@@ -27,7 +27,6 @@ public class MixinModList extends FMLHandshakeMessage {
           remap = false
   )
   public void filterMods(List<ModContainer> mods, CallbackInfo ci) {
-    ModMain.logger.info("mod list");
     if (Minecraft.getMinecraft().isSingleplayer()) return;
 
     Set<String> keys = new HashSet<>(modTags.keySet());
@@ -37,6 +36,6 @@ public class MixinModList extends FMLHandshakeMessage {
       }
     }
 
-    ModMain.logger.info(modTags);
+    ModMain.logger.info("Visible mods: " + modTags);
   }
 }

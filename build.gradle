@@ -9,15 +9,19 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
-        
-apply plugin: 'net.minecraftforge.gradle'
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+    id 'java'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
-apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '1.0'
@@ -32,95 +36,65 @@ sourceSets {
     }
 }
 
+configurations {
+    compile.extendsFrom shadow
+}
+
 minecraft {
-    mappings channel: 'snapshot', version: '20171003-1.12'
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    version "1.8.9-11.15.1.2318-1.8.9"
+    mappings "stable_20"
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+    runDir "run"
 
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args "--tweakClass", "org.spongepowered.asm.launch.MixinTweaker"
-
-            mods {
-                hidemod {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                hidemod {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+    makeObfSourceJar = false
 }
 
 mixin {
     add sourceSets.main, 'mixins.hidemod.refmap.json'
-    config 'mixins.hidemod.json'
+}
+
+repositories {
+    maven {
+        url 'https://repo.spongepowered.org/maven/'
+    }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation 'org.spongepowered:mixin:0.8.5'
+    shadow('org.spongepowered:mixin:0.7.10-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'gson'
+        exclude module: 'guava'
+        exclude module: 'commons-io'
+        exclude module: 'log4j-core'
+    }
 }
 
+shadowJar {
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+    classifier ""
+}
 
-// Example for how to get properties into the manifest for reading by the runtime..
+reobf {
+    shadowJar {}
+}
+
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes([
             "Specification-Title": "hidemod",
             "Specification-Vendor": "qwert21",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor": "qwert21",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
 
             "MixinConfigs": "mixins.hidemod.json",
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker", // for deploy
+//            "FMLCorePlugin" : "ru.qwert21.hidemod.launch.MixinLoader", // for dev
             "ForceLoadAsMod": true
         ])
-    }
-}
-
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
     }
 }

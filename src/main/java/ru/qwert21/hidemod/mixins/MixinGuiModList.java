@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.qwert21.hidemod.ModMain;
 import ru.qwert21.hidemod.gui.GuiButtonVisibility;
 
-@Mixin(value = GuiModList.class, remap = false)
+@Mixin(value = GuiModList.class)
 public class MixinGuiModList extends GuiScreen {
   @Shadow
   private GuiButton configModButton;
@@ -28,14 +28,12 @@ public class MixinGuiModList extends GuiScreen {
                   value = "INVOKE",
                   target = "Lnet/minecraftforge/fml/client/GuiModList;updateCache()V"
           ),
-          require = 1,
-          remap = true
+          require = 1
   )
   public void initGui(CallbackInfo ci) {
-    ModMain.logger.info("Init gui");
     configModButton.width -= 22;
     visibilityModButton =
-      new GuiButtonVisibility(configModButton.x + configModButton.width + 2, configModButton.y, false);
+      new GuiButtonVisibility(configModButton.xPosition + configModButton.width + 2, configModButton.yPosition, false);
     this.buttonList.add(visibilityModButton);
   }
 
@@ -46,7 +44,6 @@ public class MixinGuiModList extends GuiScreen {
           remap = false
   )
   private void updateCache1(CallbackInfo ci) {
-    ModMain.logger.info("Update cache 1");
     visibilityModButton.visible = false;
   }
 
@@ -57,7 +54,6 @@ public class MixinGuiModList extends GuiScreen {
           remap = false
   )
   private void updateCache2(CallbackInfo ci) {
-    ModMain.logger.info("Update cache 2");
     visibilityModButton.visible = true;
     visibilityModButton.stateVisibility = ModMain.config.getState(selectedMod.getModId());
   }
@@ -65,11 +61,9 @@ public class MixinGuiModList extends GuiScreen {
   @Inject(
           method = "actionPerformed",
           at = @At("HEAD"),
-          require = 1,
-          remap = true
+          require = 1
   )
   private void actionPerformed(GuiButton button, CallbackInfo ci) {
-    ModMain.logger.info("Action perform");
     if (!(button instanceof GuiButtonVisibility)) return;
     if (!button.enabled) return;
     if (selectedMod == null) return;

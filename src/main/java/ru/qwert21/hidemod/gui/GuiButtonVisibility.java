@@ -19,18 +19,18 @@ public class GuiButtonVisibility extends GuiButton {
   }
 
   @Override
-  public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+  public void drawButton(Minecraft mc, int mouseX, int mouseY) {
     if (!this.visible) return;
 
-    this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+    this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
     int i = getHoverState(this.hovered);
 
     GlStateManager.color(1.0F, 1.0F, 1.0F);
-    mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-    this.drawTexturedModalRect(this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
-    this.drawTexturedModalRect(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
+    mc.getTextureManager().bindTexture(buttonTextures);
+    this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
+    this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
 
     mc.getTextureManager().bindTexture(TEXTURE);
-    Gui.drawModalRectWithCustomSizedTexture(this.x, this.y, stateVisibility ? 0 : 20, 0, this.width, this.height, 40, 20);
+    Gui.drawModalRectWithCustomSizedTexture(this.xPosition, this.yPosition, stateVisibility ? 0 : 20, 0, this.width, this.height, 40, 20);
   }
 }
