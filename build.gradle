@@ -14,15 +14,11 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.github.johnrengelman.shadow' version '2.0.4'
-    id 'java'
-}
+apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
-
-apply plugin: 'maven-publish'
 
 version = '1.0'
 group = 'ru.qwert21.hidemod'
@@ -45,6 +41,8 @@ minecraft {
     mappings "stable_20"
 
     runDir "run"
+
+    clientRunArgs += ['--tweakClass', 'org.spongepowered.asm.launch.MixinTweaker']
 
     makeObfSourceJar = false
 }
@@ -70,31 +68,28 @@ dependencies {
     }
 }
 
-shadowJar {
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    classifier ""
-}
-
-reobf {
-    shadowJar {}
-}
-
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes([
-            "Specification-Title": "hidemod",
-            "Specification-Vendor": "qwert21",
-            "Specification-Version": "1",
             "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
+            "Implementation-Version": version,
             "Implementation-Vendor": "qwert21",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
 
             "MixinConfigs": "mixins.hidemod.json",
-            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker", // for deploy
-//            "FMLCorePlugin" : "ru.qwert21.hidemod.launch.MixinLoader", // for dev
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
             "ForceLoadAsMod": true
         ])
     }
+
+    from {
+        configurations.shadow.collect {
+            zipTree(it).matching {
+                exclude '**/*.RSA', '**/*.SF'
+            }
+        }
+    }
+
+    finalizedBy 'reobfJar'
 }
