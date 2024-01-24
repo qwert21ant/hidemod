@@ -3,8 +3,8 @@ package ru.qwert21.hidemod.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 import ru.qwert21.hidemod.ModMain;
 
 public class GuiButtonVisibility extends GuiButton {
@@ -25,7 +25,7 @@ public class GuiButtonVisibility extends GuiButton {
     this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
     int i = getHoverState(this.hovered);
 
-    GlStateManager.color(1.0F, 1.0F, 1.0F);
+    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     mc.getTextureManager().bindTexture(buttonTextures);
     this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + i * 20, this.width / 2, this.height);
     this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);

@@ -1,8 +1,8 @@
 package ru.qwert21.hidemod.mixins;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.network.handshake.FMLHandshakeMessage;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.network.handshake.FMLHandshakeMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

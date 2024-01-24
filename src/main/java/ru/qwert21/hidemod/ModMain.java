@@ -1,11 +1,10 @@
 package ru.qwert21.hidemod;
 
-import net.minecraftforge.fml.client.GuiModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.client.GuiModList;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.Sys;
 
 import java.lang.reflect.Method;
 

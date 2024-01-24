@@ -2,8 +2,8 @@ package ru.qwert21.hidemod.mixins;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.client.GuiModList;
-import net.minecraftforge.fml.common.ModContainer;
+import cpw.mods.fml.client.GuiModList;
+import cpw.mods.fml.common.ModContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,10 +24,7 @@ public class MixinGuiModList extends GuiScreen {
 
   @Inject(
           method = "initGui",
-          at = @At(
-                  value = "INVOKE",
-                  target = "Lnet/minecraftforge/fml/client/GuiModList;updateCache()V"
-          ),
+          at = @At("TAIL"),
           require = 1
   )
   public void initGui(CallbackInfo ci) {
@@ -35,25 +32,16 @@ public class MixinGuiModList extends GuiScreen {
     visibilityModButton =
       new GuiButtonVisibility(configModButton.xPosition + configModButton.width + 2, configModButton.yPosition, false);
     this.buttonList.add(visibilityModButton);
-  }
 
-  @Inject(
-          method = "updateCache",
-          at = @At("HEAD"),
-          require = 1,
-          remap = false
-  )
-  private void updateCache1(CallbackInfo ci) {
     visibilityModButton.visible = false;
   }
 
   @Inject(
-          method = "updateCache",
-          at = @At("TAIL"),
-          require = 1,
-          remap = false
+    method = "selectModIndex",
+    at = @At("TAIL"),
+    remap = false
   )
-  private void updateCache2(CallbackInfo ci) {
+  public void selectModIndex(int var1, CallbackInfo ci) {
     visibilityModButton.visible = true;
     visibilityModButton.stateVisibility = ModMain.config.getState(selectedMod.getModId());
   }
