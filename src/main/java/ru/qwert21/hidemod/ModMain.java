@@ -8,16 +8,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Method;
 
-@Mod(
-        modid = ModMain.MODID,
-        name = ModMain.NAME,
-        version = ModMain.VERSION
-)
+@Mod(modid = ModMain.MODID)
 public class ModMain {
   public static final String MODID = "hidemod";
-  public static final String NAME = "Hide Mod";
-  public static final String VERSION = "1.0";
-
   public static Logger logger;
   public static Config config;
 
@@ -27,11 +20,5 @@ public class ModMain {
     config = new Config(event.getSuggestedConfigurationFile());
 
     config.init();
-
-    Method[] methods = GuiModList.class.getDeclaredMethods();
-    for(Method m : methods) {
-      logger.info(m.getName());
-      logger.info(m);
-    }
   }
 }
