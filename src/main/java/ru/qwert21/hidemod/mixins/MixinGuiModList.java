@@ -14,10 +14,10 @@ import ru.qwert21.hidemod.gui.GuiButtonVisibility;
 
 @Mixin(value = GuiModList.class)
 public class MixinGuiModList extends GuiScreen {
-  @Shadow
+  @Shadow(remap = false)
   private GuiButton configModButton;
 
-  @Shadow
+  @Shadow(remap = false)
   private ModContainer selectedMod;
 
   GuiButtonVisibility visibilityModButton;

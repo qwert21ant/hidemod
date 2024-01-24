@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Mixin(value = FMLHandshakeMessage.ModList.class, remap = false)
 public class MixinModList extends FMLHandshakeMessage {
-  @Shadow
+  @Shadow(remap = false)
   private Map<String, String> modTags;
 
   @Inject(
